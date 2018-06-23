@@ -1,8 +1,9 @@
 # Mac OS
 .DS_Store
 
-# Electronjs Compiled
+# Electronjs
 build/
+dist/
 
 # Logs
 logs
