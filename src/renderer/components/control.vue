@@ -120,6 +120,13 @@
     created(){
         this.store = this.$store
         this.BrowserWindow = this.$electron.remote.getCurrentWindow()
+
+        let my_vue = this
+        let Mousetrap = require('mousetrap')
+        Mousetrap.bind('shift+f12', () => {
+            my_vue.kyara_view_open_init()
+            my_vue.$router.push('/')
+        })
     }
   }
 </script>

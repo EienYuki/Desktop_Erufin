@@ -26,6 +26,15 @@
             this.BrowserWindow.setSize(500,650)
             this.$router.push('/control')
         },
+        kyara_userData_open(){
+            this.$electron.shell.openItem(this.$electron.remote.app.getPath('userData'))
+        },
+        kyara_zoom_change(model){
+            if(model)
+                this.store.commit('kyara_set_zoom', this.store.state.run.kyara.zoom + 0.1)
+            else
+                this.store.commit('kyara_set_zoom', this.store.state.run.kyara.zoom - 0.1)
+        },
         kyara_zoom(){
             var img = $('.img')
             img.css('width', this.store.state.run.kyara.img.width * this.store.state.run.kyara.zoom)
@@ -40,6 +49,7 @@
         },
         menu_setup(){
             const remote = require('electron').remote;
+            let Mousetrap = require('mousetrap');
             const Menu = remote.Menu;
             const MenuItem = remote.MenuItem;
             
@@ -49,24 +59,33 @@
                 label: '控制台',
                 click: () => this.kyara_control_open()
             }))
+            Mousetrap.bind('shift+f12', () => this.kyara_control_open())
+
             menu.append(new MenuItem({
                 label: '開啓資源目錄',
-                click: () => this.$electron.shell.openItem(this.$electron.remote.app.getPath('userData'))
+                click: () => this.kyara_userData_open()
             }))
+            Mousetrap.bind('shift+f11', () => this.kyara_userData_open())
+
             menu.append(new MenuItem({
                 label: '放大',
-                click: () => this.store.commit('kyara_set_zoom', this.store.state.run.kyara.zoom + 0.1)
+                click: () => this.kyara_zoom_change(true)
             }))
+            Mousetrap.bind('shift+f1', () => this.kyara_zoom_change(true))
+
             menu.append(new MenuItem({
                 label: '縮小',
-                click: () => this.store.commit('kyara_set_zoom', this.store.state.run.kyara.zoom - 0.1)
+                click: () => this.kyara_zoom_change(false)
             }))
+            Mousetrap.bind('shift+f2', () => this.kyara_zoom_change(false))
+
             menu.append(new MenuItem({
                 label: '角色置頂',
                 type: 'checkbox',
                 checked: false,
                 click: () => this.kyara_top()
             }))
+            Mousetrap.bind('shift+f3', () => this.kyara_top())
         }
     },
     created(){
