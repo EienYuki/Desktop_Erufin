@@ -133,6 +133,9 @@
 </script>
 
 <style>
+    .control *{
+        -webkit-app-region: no-drag;
+    }
     .control{
         border: 1px solid skyblue;
         border-radius: 8px;
@@ -148,12 +151,14 @@
         margin: 5px;
     }
     .control > .title{
+        -webkit-app-region: drag;
         text-align: center;
         background-color: #3096ff;
         margin-bottom: 10px;
         opacity: .97;
     }
     .control > .title h4{
+        -webkit-app-region: drag;
         color: white;
         font-size: 1.38rem;
     }
