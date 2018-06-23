@@ -3353,7 +3353,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 if (process.env.NODE_ENV !== 'development') {
-  global.__static = __webpack_require__(0).join(__dirname, '/static').replace(/\\/g, '\\\\');
+    global.__static = __webpack_require__(0).join(__dirname, '/static').replace(/\\/g, '\\\\');
 }
 
 var window_kyara = void 0;
@@ -3361,30 +3361,35 @@ var window_kyara = void 0;
 var window_kyara_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:9080' : 'file://' + __dirname + '/index.html';
 
 function createWindow() {
-  window_kyara = new __WEBPACK_IMPORTED_MODULE_0_electron__["BrowserWindow"]({
-    title: '',
-    titleBarStyle: 'customButtonsOnHover',
-    alwaysOnTop: false,
-    transparent: true,
-    frame: false,
-    hasShadow: false,
-    resizable: false,
-    webPreferences: {
-      webSecurity: false
-    }
-  });
+    window_kyara = new __WEBPACK_IMPORTED_MODULE_0_electron__["BrowserWindow"]({
+        title: '',
+        titleBarStyle: 'customButtonsOnHover',
+        alwaysOnTop: false,
+        transparent: true,
+        frame: false,
+        hasShadow: false,
+        resizable: false,
+        webPreferences: {
+            webSecurity: false
+        }
+    });
 
-  window_kyara.loadURL(window_kyara_URL);
+    window_kyara.menu = new __WEBPACK_IMPORTED_MODULE_0_electron__["Menu"]();
+    window_kyara.webContents.on('context-menu', function (e, params) {
+        window_kyara.menu.popup(window_kyara, params.x, params.y);
+    });
 
-  window_kyara.on('closed', function () {
-    window_kyara = null;
-  });
+    window_kyara.loadURL(window_kyara_URL);
+
+    window_kyara.on('closed', function () {
+        window_kyara = null;
+    });
 }
 
 var userData_path = __WEBPACK_IMPORTED_MODULE_0_electron__["app"].getPath('userData');
 var fs = __webpack_require__(60);
 if (!fs.existsSync(userData_path)) {
-  fs.mkdir(userData_path);
+    fs.mkdir(userData_path);
 }
 userData_path = userData_path + '/resources';
 if (!fs.existsSync(userData_path)) {}
@@ -3392,15 +3397,15 @@ if (!fs.existsSync(userData_path)) {}
 __WEBPACK_IMPORTED_MODULE_0_electron__["app"].on('ready', createWindow);
 
 __WEBPACK_IMPORTED_MODULE_0_electron__["app"].on('window-all-closed', function () {
-  if (process.platform !== 'darwin') {
-    __WEBPACK_IMPORTED_MODULE_0_electron__["app"].quit();
-  }
+    if (process.platform !== 'darwin') {
+        __WEBPACK_IMPORTED_MODULE_0_electron__["app"].quit();
+    }
 });
 
 __WEBPACK_IMPORTED_MODULE_0_electron__["app"].on('activate', function () {
-  if (window_kyara === null) {
-    createWindow();
-  }
+    if (window_kyara === null) {
+        createWindow();
+    }
 });
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, "src/main"))
 

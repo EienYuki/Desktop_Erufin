@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, Menu, MenuItem } from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -15,27 +15,32 @@ const window_kyara_URL = process.env.NODE_ENV === 'development'
 : `file://${__dirname}/index.html`
 
 function createWindow () {
-  /**
-   * Initial window options
-   */
-  window_kyara = new BrowserWindow({
-    title: '',
-    titleBarStyle: 'customButtonsOnHover',
-    alwaysOnTop: false,
-    transparent: true,
-    frame: false,
-    hasShadow: false,
-    resizable: false,
-    webPreferences:{
-        webSecurity:false
-    }
-  })
+    /**
+    * Initial window options
+    */
+    window_kyara = new BrowserWindow({
+        title: '',
+        titleBarStyle: 'customButtonsOnHover',
+        alwaysOnTop: false,
+        transparent: true,
+        frame: false,
+        hasShadow: false,
+        resizable: false,
+        webPreferences:{
+            webSecurity:false
+        }
+    })
 
-  window_kyara.loadURL(window_kyara_URL)
+    window_kyara.menu = new Menu()
+    window_kyara.webContents.on('context-menu', (e, params) =>{
+        window_kyara.menu.popup(window_kyara, params.x, params.y)
+    })
 
-  window_kyara.on('closed', () => {
-    window_kyara = null
-  })
+    window_kyara.loadURL(window_kyara_URL)
+
+    window_kyara.on('closed', () => {
+        window_kyara = null
+    })
 }
 
 var userData_path = app.getPath('userData')

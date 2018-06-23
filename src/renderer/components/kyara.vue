@@ -41,10 +41,9 @@
             const remote = require('electron').remote;
             const Menu = remote.Menu;
             const MenuItem = remote.MenuItem;
-
-            let rightClickPosition = null
-
-            const menu = new Menu()
+            
+            const menu = this.BrowserWindow.menu
+            menu.clear()
             menu.append(new MenuItem({
                 label: '控制台',
                 click: () => this.kyara_control_open()
@@ -67,12 +66,6 @@
                 checked: false,
                 click: () => this.kyara_top()
             }))
-
-            window.addEventListener('contextmenu', (e) => {
-                e.preventDefault()
-                rightClickPosition = {x: e.x, y: e.y}
-                menu.popup(remote.getCurrentWindow())
-            }, false)
         }
     },
     created(){
