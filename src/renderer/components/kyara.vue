@@ -12,7 +12,8 @@
     data(){
         return{
             store: null,
-            BrowserWindow: null
+            BrowserWindow: null,
+            system_platform: require('os').platform()
         }
     },
     methods: {
@@ -87,6 +88,7 @@
             return false
         },false)
 
+        let my_vue = this
         this.$nextTick(function(){
             $('.img').on('load', function(){
                 var img = document.getElementById('kyara_img'); 
@@ -95,6 +97,11 @@
                 window.kyara_vue.store.commit('kyara_save_img_size', {width, height})
                 window.kyara_vue.kyara_zoom()
             })
+            if(my_vue.system_platform == 'win32'){
+                $('.img').on('contextmenu', function(e){
+                    window.kyara_window.menu.popup(window.kyara_window)
+                })
+            }
             $('.img').on('error', function(){
                 window.kyara_vue.$electron.shell.openItem(window.kyara_vue.$electron.remote.app.getPath('userData'))
             })
