@@ -23,7 +23,7 @@
                 x: pos[0],
                 y: pos[1]
             })
-            this.BrowserWindow.setSize(500,650)
+            this.BrowserWindow.setSize(500,363)
             this.$router.push('/control')
         },
         kyara_userData_open(){
@@ -48,10 +48,10 @@
             }
         },
         menu_setup(){
-            const remote = require('electron').remote;
-            let Mousetrap = require('mousetrap');
-            const Menu = remote.Menu;
-            const MenuItem = remote.MenuItem;
+            const remote = require('electron').remote
+            let Mousetrap = require('mousetrap')
+            const Menu = remote.Menu
+            const MenuItem = remote.MenuItem
             
             const menu = this.BrowserWindow.menu
             menu.clear()

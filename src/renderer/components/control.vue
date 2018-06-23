@@ -120,6 +120,7 @@
     created(){
         this.store = this.$store
         this.BrowserWindow = this.$electron.remote.getCurrentWindow()
+        window.control_vue = this
 
         let my_vue = this
         let Mousetrap = require('mousetrap')
@@ -133,13 +134,11 @@
 
 <style>
     .control{
-        width: 500px;
-        height: 650px;
         border: 1px solid skyblue;
         border-radius: 8px;
         background-color: rgba(254, 254, 255, 0.95);
-        overflow: hidden;
         position: relative;
+        overflow: hidden;
     }
     .control button{
         background-color: white;
@@ -194,17 +193,11 @@
         margin-top: 10px;
     }
 
-    .control .clock button{
-        background-color: white;
-    }
-
     .control .goto{
-        position: absolute;
-        width: 60px;
-        height: 60px;
-        top: 75%;
-        left: 0px;
-        transform: translate(-50%, -50%);
+        position: relative;
+        width: 50px;
+        height: 50px;
+        margin-bottom: 10px;
         transition: all .2s ease-in-out;
         opacity: .97;
     }
@@ -219,18 +212,13 @@
     .control .goto a:hover{
         box-shadow: 0 0 3px black;
     }
-    .control .goto a:hover svg{
-        width: 34px;
-        height: 34px;
-        left: 58%;
-    }
     .control .goto a svg{
         position: absolute;
         fill: #f3f8ff;
-        width: 30px;
-        height: 30px;
+        width: 40px;
+        height: 40px;
         top: 50%;
-        left: 62%;
+        left: 47%;
         transition: all .2s ease-in-out;
         transform: translate(-50%, -50%);
     }
