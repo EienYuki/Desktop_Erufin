@@ -14,16 +14,13 @@
                     <div class="col-12">
                         <div class="input-group">                        
                             <div class="input-group-prepend">
-                                <span class="alert-primary input-group-text" id="inputGroup-sizing-default">選擇角色</span>
+                                <span class="alert-primary input-group-text">選擇角色</span>
                             </div>
-                            <select class="custom-select" id="inputGroupSelect04">
-                                <option selected value="Zuihou">瑞鳳</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                            <select class="custom-select">
+                                <option v-for="(item, index) in this.$store.state.kyaras" v-bind:value="index">{{item.name}}</option>
                             </select>
                             <div class="input-group-prepend">
-                                <span class="alert-primary input-group-text space" id="inputGroup-sizing-default">音效</span>
+                                <span class="alert-primary input-group-text space">音效</span>
                             </div>
                             <select class="custom-select">
                                 <option selected value="0">不啓用</option>
@@ -41,9 +38,24 @@
                     <div class="col-12">
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="alert-primary input-group-text" id="inputGroup-sizing-default">時間</span>
+                                <span class="alert-primary input-group-text">啓用</span>
                             </div>
-                            <select class="custom-select">
+                            <select class="custom-select" id="alarm_enable_select">
+                                <option selected value="1">啓用</option>
+                                <option value="0">不啓用</option>
+                            </select>
+                            <div class="input-group-prepend">
+                                <span class="alert-primary input-group-text space">名稱</span>
+                            </div>
+                            <input type="text" class="form-control" id="alarm_name_input" placeholder="name">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="alert-primary input-group-text">時間</span>
+                            </div>
+                            <select class="custom-select" id="alarm_week_select">
                                 <option selected value="0">星期天</option>
                                 <option value="1">星期一</option>
                                 <option value="2">星期二</option>
@@ -52,13 +64,13 @@
                                 <option value="5">星期五</option>
                                 <option value="6">星期六</option>
                             </select>
-                            <select class="custom-select">
+                            <select class="custom-select" id="alarm_hour_select">
                                 <option v-for="i in range(0, 23)" :key="'hour'+i" v-bind:value="i">{{i+ '時'}}</option>
                             </select>
-                            <select class="custom-select">
+                            <select class="custom-select" id="alarm_minute_select">
                                 <option v-for="i in range(0, 59)" :key="'minute'+i" v-bind:value="i">{{i+ '分'}}</option>
                             </select>
-                            <select class="custom-select">
+                            <select class="custom-select" id="alarm_repeat_select">
                                 <option selected value="0">不重複</option>
                                 <option value="1">重複</option>
                             </select>
@@ -67,18 +79,18 @@
                     <div class="col-12">
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="alert-primary input-group-text" id="inputGroup-sizing-default">動作</span>
+                                <span class="alert-primary input-group-text">動作</span>
                             </div>
                             <div class="input-group-prepend">
-                                <button type="button" class="btn btn-outline-primary">選擇聲音</button>
+                                <button type="button" class="btn btn-outline-primary" id="alarm_music_select" @click="alarm_music_select">選擇聲音</button>
                             </div>
                             <div class="input-group-prepend">
-                                <span class="alert-primary input-group-text space" id="inputGroup-sizing-default">切換圖片</span>
+                                <span class="alert-primary input-group-text space">切換圖片</span>
                             </div>
-                            <select class="custom-select">
-                                <option v-for="i in range(0, 23)" :key="'action rid'+i" v-bind:value="i">{{i}}</option>
+                            <select class="custom-select" id="alarm_img_select">
+                                <option v-for="(item, index) in this.$store.state.kyaras[this.$store.state.run.kyara.id].images">{{index}}</option>
                             </select>
-                            <div class="input-group-prepend">
+                            <div class="input-group-prepend" @click="set_alarm">
                                 <button type="button" class="btn btn-outline-primary">設定</button>
                             </div>
                         </div>
@@ -100,7 +112,19 @@
     data(){
         return{
             store: null,
-            BrowserWindow: null
+            BrowserWindow: null,
+            tmp_alarm:{
+                enable: true,
+                name: '測試',
+                time: {
+                    repeat: true,
+                    week: 1,
+                    hour: 12,
+                    minute: 20
+                },
+                kyara_img: '',
+                sound_path: ''
+            }
         }
     },
     mounted(){
@@ -112,6 +136,23 @@
                 x: pos[0],
                 y: pos[1]
             })
+        },
+        set_alarm(){
+            this.tmp_alarm.time.enable = ($('#alarm_enable_select').val() == '1')? true:false
+            this.tmp_alarm.time.name = $('#alarm_name_input').val()
+
+            this.tmp_alarm.time.repeat = ($('#alarm_repeat_select').val() == '1')? true:false
+            this.tmp_alarm.time.week = $('#alarm_week_select').val()
+            this.tmp_alarm.time.hour = $('#alarm_hour_select').val()
+            this.tmp_alarm.time.minute = $('#alarm_minute_select').val()
+            
+            this.tmp_alarm.kyara_img = $('#alarm_img_select').val()
+        },
+        alarm_music_select(){
+            var path = this.$electron.remote.dialog.showOpenDialog({
+                properties: [ 'openFile', 'openDirectory', 'multiSelections' ]
+            })
+            this.tmp_alarm.sound_path = path[0]
         },
         range(start, end){
             return Array(end - start + 1).fill().map((_, idx) => start + idx)

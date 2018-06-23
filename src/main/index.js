@@ -25,6 +25,7 @@ function createWindow () {
         transparent: true,
         frame: false,
         hasShadow: false,
+        maximizable: false,
         resizable: false,
         webPreferences:{
             webSecurity:false

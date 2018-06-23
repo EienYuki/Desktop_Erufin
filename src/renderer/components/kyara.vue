@@ -23,7 +23,7 @@
                 x: pos[0],
                 y: pos[1]
             })
-            this.BrowserWindow.setSize(500,363)
+            this.BrowserWindow.setSize(500,411)
             this.$router.push('/control')
         },
         kyara_userData_open(){

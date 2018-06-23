@@ -38,7 +38,8 @@ export default new Vuex.Store({
             'Zuihou': {
                 name: '瑞鳳',
                 images: {
-                    'init':'0.png'
+                    'init':'0.png',
+                    's0':'0.png'
                 },
                 sounds: {
                     's1':'0.mp3'

@@ -27,6 +27,10 @@
     .v-enter-active  { transition: opacity 1.5s }
     .v-enter-to { opacity: 1; }
 
+    h1, h2, h3, h4, span{
+        cursor: default;
+        -webkit-user-select: none;
+    }
     *{
         margin: 0;
         padding: 0;
