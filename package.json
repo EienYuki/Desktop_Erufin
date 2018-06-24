@@ -53,6 +53,7 @@
   "dependencies": {
     "axios": "^0.16.1",
     "bootstrap": "^4.1.1",
+    "electron-config": "^1.0.0",
     "electron-json-storage": "^4.1.0",
     "electron-settings": "^3.2.0",
     "font-awesome": "^4.7.0",

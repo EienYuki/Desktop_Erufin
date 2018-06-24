@@ -17,6 +17,18 @@
         }
     },
     methods: {
+        save_config(){
+            var fs = require('fs-extra')
+            var app = this.$electron.remote.app
+            var pos = this.BrowserWindow.getPosition()
+            this.store.commit('kyara_set_xy', {
+                x: pos[0],
+                y: pos[1]
+            })
+            fs.writeFileSync(app.getPath('userData') + '/resources/run.json', JSON.stringify(
+                this.store.state.run
+            ))
+        },
         kyara_control_open(){
             var pos = this.BrowserWindow.getPosition()
             this.store.commit('kyara_set_xy', {
@@ -86,6 +98,12 @@
                 click: () => this.kyara_top()
             }))
             Mousetrap.bind('shift+f3', () => this.kyara_top())
+
+            menu.append(new MenuItem({
+                label: '儲存設定',
+                click: () => this.save_config()
+            }))
+            Mousetrap.bind('shift+f10', () => this.save_config())
         }
     },
     created(){
@@ -121,9 +139,6 @@
                     window.kyara_window.menu.popup(window.kyara_window)
                 })
             }
-            $('.img').on('error', function(){
-                window.kyara_vue.$electron.shell.openItem(window.kyara_vue.$electron.remote.app.getPath('userData'))
-            })
         })
     }
   }

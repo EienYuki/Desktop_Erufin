@@ -1,0 +1,25 @@
+{
+    "name": "瑞鳳",
+    "images": {
+        "init":"0.png",
+        "s0":"0.png"
+    },
+    "sounds": {
+        "s1":"0.mp3"
+    },
+    "events": [
+        {
+            "enable": true,
+            "name": "測試",
+            "time": {
+                "repeat": true,
+                "week": 1,
+                "hour": 12,
+                "minute": 20
+            },
+            "action": [
+                {"type": "image:sound", "rid": "init:s1", "keep": 1000}
+            ]
+        }
+    ]
+}

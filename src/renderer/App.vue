@@ -10,10 +10,18 @@
   export default {
     name: 'desktop_erufin',
     created(){
+        var my_vue = this
+        var app = this.$electron.remote.app
         var BrowserWindow = this.$electron.remote.getCurrentWindow()
-        var userData_path = this.$electron.remote.app.getPath('userData')
-        this.$store.commit('run_root_path', userData_path + '/resources')
-        this.$store.commit('kyara_setup', 'Zuihou')
+        var resources_path = app.getPath('userData') + '/resources'
+        
+        if(app.my_config.run_data == null){
+            this.$store.commit('run_root_path', resources_path)
+            this.$store.commit('kyara_setup', app.my_config.kyara_id[0])
+        }else{
+            this.$store.commit('run_root_path', resources_path)
+            this.$store.commit('load_run_config', app.my_config.run_data)
+        }
         BrowserWindow.setPosition(this.$store.state.run.kyara.x, this.$store.state.run.kyara.y)
     }
   }
@@ -22,8 +30,8 @@
 <style>
     .v-leave { opacity: 1; }
     .v-leave-active { transition: opacity .8s }
-    .v-leave-to { opacity: 0; }
-    .v-enter { opacity: 0; }
+    .v-leave-to { opacity: .1; }
+    .v-enter { opacity: .1; }
     .v-enter-active  { transition: opacity 1.5s }
     .v-enter-to { opacity: 1; }
 
@@ -42,5 +50,6 @@
     main{
         width: 100%;
         height: 100%;
+        overflow: hidden;
     }
 </style>

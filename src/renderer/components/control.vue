@@ -16,15 +16,24 @@
                             <div class="input-group-prepend">
                                 <span class="alert-primary input-group-text">選擇角色</span>
                             </div>
-                            <select class="custom-select">
-                                <option v-for="(item, index) in this.$store.state.kyaras" v-bind:value="index">{{item.name}}</option>
+                            <select class="custom-select" id="kyara_select" @change="kyara_change">
+                                <template v-for="(item, index) in store.state.kyaras">
+                                    <option v-if="store.state.run.kyara.id == index" selected v-bind:value="index" :key="'kyara_select 0' + index">{{item.name}}</option>
+                                    <option v-else v-bind:value="index" :key="'kyara_select 1' + index">{{item.name}}</option>
+                                </template>
                             </select>
                             <div class="input-group-prepend">
                                 <span class="alert-primary input-group-text space">音效</span>
                             </div>
-                            <select class="custom-select">
-                                <option selected value="0">不啓用</option>
-                                <option value="1">啓用</option>
+                            <select class="custom-select" id="kyara_enable_sound_select" @change="kyara_enable_sound">
+                                <template v-if="store.state.run.kyara.enable_sound">
+                                    <option value="0">不啓用</option>
+                                    <option selected value="1">啓用</option>
+                                </template>
+                                <template v-else>
+                                    <option selected value="0">不啓用</option>
+                                    <option value="1">啓用</option>
+                                </template>
                             </select>
                         </div>
                     </div>
@@ -65,10 +74,10 @@
                                 <option value="6">星期六</option>
                             </select>
                             <select class="custom-select" id="alarm_hour_select">
-                                <option v-for="i in range(0, 23)" :key="'hour'+i" v-bind:value="i">{{i+ '時'}}</option>
+                                <option v-for="i in range(0, 23)" :key="'alarm_hour_select'+i" v-bind:value="i">{{i+ '時'}}</option>
                             </select>
                             <select class="custom-select" id="alarm_minute_select">
-                                <option v-for="i in range(0, 59)" :key="'minute'+i" v-bind:value="i">{{i+ '分'}}</option>
+                                <option v-for="i in range(0, 59)" :key="'alarm_minute_select'+i" v-bind:value="i">{{i+ '分'}}</option>
                             </select>
                             <select class="custom-select" id="alarm_repeat_select">
                                 <option selected value="0">不重複</option>
@@ -88,7 +97,7 @@
                                 <span class="alert-primary input-group-text space">切換圖片</span>
                             </div>
                             <select class="custom-select" id="alarm_img_select">
-                                <option v-for="(item, index) in this.$store.state.kyaras[this.$store.state.run.kyara.id].images">{{index}}</option>
+                                <option v-for="(item, index) in store.state.kyaras[store.state.run.kyara.id].images" :key="'alarm_img_select' + index">{{index}}</option>
                             </select>
                             <div class="input-group-prepend" @click="set_alarm">
                                 <button type="button" class="btn btn-outline-primary">設定</button>
@@ -137,6 +146,12 @@
                 y: pos[1]
             })
         },
+        kyara_change(){
+            this.$store.commit('kyara_setup', $('#kyara_select').val())
+        },
+        kyara_enable_sound(){
+            this.$store.commit('kyara_set_enable_sound', ($('#kyara_enable_sound_select').val() == '1')? true:false)
+        },
         set_alarm(){
             this.tmp_alarm.time.enable = ($('#alarm_enable_select').val() == '1')? true:false
             this.tmp_alarm.time.name = $('#alarm_name_input').val()
@@ -147,6 +162,8 @@
             this.tmp_alarm.time.minute = $('#alarm_minute_select').val()
             
             this.tmp_alarm.kyara_img = $('#alarm_img_select').val()
+
+            this.store.commit('alarm_add', this.tmp_alarm)
         },
         alarm_music_select(){
             var path = this.$electron.remote.dialog.showOpenDialog({

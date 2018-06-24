@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, MenuItem } from 'electron'
+import { shell, app, BrowserWindow, Menu, MenuItem } from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -14,6 +14,29 @@ const window_kyara_URL = process.env.NODE_ENV === 'development'
 ? `http://localhost:9080`
 : `file://${__dirname}/index.html`
 
+
+var fs = require('fs-extra')
+var storage = require('electron-json-storage')
+function get_directory_list(dir){
+    return new Promise(function(resolve, reject){
+        var files = fs.readdirSync(dir)
+        var directory_list = []
+        files.forEach(function(file) {
+            if(fs.statSync(dir + '/' + file).isDirectory()){
+                directory_list.push(file)
+            }
+        })
+        resolve(directory_list)
+    })
+}
+function read_json_file(path){
+    return new Promise(function(resolve, reject){
+        fs.readFile(path, "utf8",  (err, data)  => {
+            if (err) throw reject(err)
+            resolve(JSON.parse(data))
+        })
+    })
+}
 function createWindow () {
     /**
     * Initial window options
@@ -31,27 +54,53 @@ function createWindow () {
             webSecurity:false
         }
     })
+    app.my_run_config = {}
 
     window_kyara.menu = new Menu()
     window_kyara.webContents.on('context-menu', (e, params) =>{
         window_kyara.menu.popup(window_kyara, params.x, params.y)
     })
 
-    window_kyara.loadURL(window_kyara_URL)
+    var userData_path = app.getPath('userData')
+    if(!fs.existsSync(userData_path)){
+        fs.mkdir(userData_path)
+    }
+    userData_path = userData_path + '/resources'
+    if(!fs.existsSync(userData_path)){
+        shell.openItem(app.getPath('userData'))
+    }else{
+        var d_list, c_data = [], r_data = null
+        var p_list = []
+        var resources_path = app.getPath('userData') + '/resources'
+        get_directory_list(resources_path).then((data) => {
+            d_list = data
+            if(fs.existsSync(userData_path + '/run.json')){
+                p_list.push(read_json_file(resources_path + '/run.json').then((json) =>{
+                    r_data = json
+                    return true
+                }))
+            }
+            
+            for(var r of data){
+                p_list.push(read_json_file(resources_path + '/' + r + '/config.json').then((json) =>{
+                    c_data.push(json)
+                    return true
+                }))
+            }
+            Promise.all(p_list).then(data => {
+                app.my_config = {
+                    kyara_id: d_list,
+                    kyara_data: c_data,
+                    run_data: r_data
+                }
+                window_kyara.loadURL(window_kyara_URL)
+            })
+        })
+    }
 
     window_kyara.on('closed', () => {
         window_kyara = null
     })
-}
-
-var userData_path = app.getPath('userData')
-var fs = require('fs-extra');
-if(!fs.existsSync(userData_path)){
-    fs.mkdir(userData_path)
-}
-userData_path = userData_path + '/resources'
-if(!fs.existsSync(userData_path)){
-    
 }
 
 app.on('ready', createWindow)
