@@ -61,15 +61,18 @@ function createWindow () {
         window_kyara.menu.popup(window_kyara, params.x, params.y)
     })
 
+    // 目錄存在？
     var userData_path = app.getPath('userData')
     if(!fs.existsSync(userData_path)){
         fs.mkdir(userData_path)
     }
+
+    // resources存在？
     userData_path = userData_path + '/resources'
     if(!fs.existsSync(userData_path)){
         shell.openItem(app.getPath('userData'))
     }else{
-        var d_list, c_data = [], r_data = null
+        var d_list, k_data = [], r_data = null
         var p_list = []
         var resources_path = app.getPath('userData') + '/resources'
         get_directory_list(resources_path).then((data) => {
@@ -83,14 +86,16 @@ function createWindow () {
             
             for(var r of data){
                 p_list.push(read_json_file(resources_path + '/' + r + '/config.json').then((json) =>{
-                    c_data.push(json)
+                    k_data.push({
+                        kyara: json.id,
+                        data: json
+                    })
                     return true
                 }))
             }
             Promise.all(p_list).then(data => {
                 app.my_config = {
-                    kyara_id: d_list,
-                    kyara_data: c_data,
+                    kyara: k_data,
                     run_data: r_data
                 }
                 window_kyara.loadURL(window_kyara_URL)

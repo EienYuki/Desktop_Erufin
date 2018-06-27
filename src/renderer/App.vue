@@ -15,6 +15,12 @@
         var BrowserWindow = this.$electron.remote.getCurrentWindow()
         var resources_path = app.getPath('userData') + '/resources'
         
+        for(var r of app.my_config.kyara){
+            this.$store.commit('load_config', {
+                key: r.kyara,
+                data: r.data
+            })
+        }
         if(app.my_config.run_data == null){
             this.$store.commit('run_root_path', resources_path)
             this.$store.commit('kyara_setup', app.my_config.kyara_id[0])

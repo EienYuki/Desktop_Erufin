@@ -37,61 +37,11 @@ export default new Vuex.Store({
             }
         },
         kyaras: {
-            'Zuihou': {
-                name: '瑞鳳',
-                images: {
-                    'init':'0.png',
-                    's0':'0.png'
-                },
-                sounds: {
-                    's1':'0.mp3'
-                },
-                events: [
-                    {
-                        enable: true,
-                        name: '測試',
-                        time: {
-                            repeat: true,
-                            week: 1,
-                            hour: 12,
-                            minute: 20
-                        },
-                        action: [
-                            {type: 'image:sound', rid: 'init:s1', keep: 1000}
-                        ]
-                    }
-                ]
-            },
-            'Hibiki': {
-                name: '響',
-                images: {
-                    'init':'0.png',
-                    's0':'1.png'
-                },
-                sounds: {
-                    's1':'0.mp3'
-                },
-                events: [
-                    {
-                        enable: true,
-                        name: '測試',
-                        time: {
-                            repeat: true,
-                            week: 1,
-                            hour: 12,
-                            minute: 20
-                        },
-                        action: [
-                            {type: 'image:sound', rid: 'init:s1', keep: 1000}
-                        ]
-                    }
-                ]
-            }
         }
     },
     mutations: {
         load_config(state, config){
-            state.kyaras = config
+            state.kyaras[config.key] = config.data
         },
         load_run_config(state, config){
             var now = state.run
