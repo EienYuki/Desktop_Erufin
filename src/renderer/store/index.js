@@ -15,7 +15,11 @@ export default new Vuex.Store({
                     width: 0,
                     height: 0
                 },
-                enable_sound: false,
+                sound: {
+                    enable: true,
+                    id: '',
+                    path: ''
+                },
                 x: 100,
                 y: 80,
                 zoom: 1,
@@ -52,7 +56,7 @@ export default new Vuex.Store({
             now.kyara.img.width = config.kyara.img.width
             now.kyara.img.height = config.kyara.img.height
 
-            now.kyara.enable_sound = config.kyara.enable_sound
+            now.kyara.sound.enable = config.kyara.sound.enable
             
             now.kyara.x = config.kyara.x
             now.kyara.y = config.kyara.y
@@ -101,7 +105,13 @@ export default new Vuex.Store({
             window.kyara_window.setAlwaysOnTop(val)
         },
         kyara_set_enable_sound(state, val){
-            state.run.kyara.enable_sound = val
+            state.run.kyara.sound.enable = val
+        },
+        kyara_sound_play(state, id){
+            var path = 'file://' + state.run.root_path + '/' + state.run.kyara.id + '/' + state.kyaras[state.run.kyara.id].sounds[id]
+
+            state.run.kyara.sound.id = id
+            state.run.kyara.sound.path = path
         }
     }
 })

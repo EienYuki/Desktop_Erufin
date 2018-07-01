@@ -2,11 +2,13 @@
     "id": "Zuihou",
     "name": "瑞鳳",
     "images": {
-        "init":"0.png",
-        "s0":"0.png"
+        "init": "0.png",
+        "s0": "0.png"
     },
     "sounds": {
-        "s1":"0.mp3"
+        "init": "Deru.mp3",
+        "C0": "Click1.mp3",
+        "t00": "00.mp3"
     },
     "events": [
         {

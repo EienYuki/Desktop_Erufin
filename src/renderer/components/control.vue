@@ -26,7 +26,7 @@
                                 <span class="alert-primary input-group-text space">音效</span>
                             </div>
                             <select class="custom-select" id="kyara_enable_sound_select" @change="kyara_enable_sound">
-                                <template v-if="store.state.run.kyara.enable_sound">
+                                <template v-if="store.state.run.kyara.sound.enable">
                                     <option value="0">不啓用</option>
                                     <option selected value="1">啓用</option>
                                 </template>

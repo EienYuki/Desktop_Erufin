@@ -2,6 +2,7 @@
     <main class="main">
         <div class="kyara">
             <img id="kyara_img" class="img"  v-bind:src="this.store.state.run.kyara.img.path">
+            <audio id="kyara_audio" v-bind:src="this.store.state.run.kyara.sound.path"></audio>
         </div>
     </main>
 </template>
@@ -11,6 +12,8 @@
     name: 'kyara',
     data(){
         return{
+            kyara_id: this.$store.state.run.kyara.id,
+            kyara_sound_old_id: '-1 -1',
             store: null,
             BrowserWindow: null,
             system_platform: require('os').platform()
@@ -57,6 +60,19 @@
                 this.store.commit('kyara_set_top', false)
             }else{
                 this.store.commit('kyara_set_top', true)
+            }
+        },
+        kyara_sound_play(id){
+            if(id in this.store.state.kyaras[this.kyara_id].sounds){
+                this.store.commit('kyara_sound_play', id)
+                if(this.store.state.run.kyara.sound.enable){
+                    var my_vue = this
+                    $('#kyara_audio').on('canplay', function(){
+                        my_vue.kyara_sound_old_id = id
+                        this.play()
+                    })
+                    if(id == my_vue.kyara_sound_old_id) $('#kyara_audio')[0].play()
+                }
             }
         },
         menu_setup(){
@@ -127,7 +143,7 @@
 
         let my_vue = this
         this.$nextTick(function(){
-            $('.img').on('load', function(){
+            $('#kyara_img').on('load', function(){
                 var img = document.getElementById('kyara_img'); 
                 var width = img.width
                 var height = img.height
@@ -135,10 +151,14 @@
                 window.kyara_vue.kyara_zoom()
             })
             if(my_vue.system_platform == 'win32'){
-                $('.img').on('contextmenu', function(e){
+                $('#kyara_img').on('contextmenu', function(e){
                     window.kyara_window.menu.popup(window.kyara_window)
                 })
             }
+            $('#kyara_img').dblclick(function(){
+                my_vue.kyara_sound_play('t00')
+            })
+            my_vue.kyara_sound_play('init')
         })
     }
   }
